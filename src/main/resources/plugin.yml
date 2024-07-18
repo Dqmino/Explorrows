@@ -1,0 +1,4 @@
+name: Explorrows
+version: '1.0'
+main: codes.domino.explorrows.Explorrows
+api-version: '1.21'
