@@ -3,6 +3,7 @@ package codes.domino.explorrows.listeners;
 import codes.domino.explorrows.Explorrows;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -25,6 +26,6 @@ public class ExplosiveArrowLandEvent implements Listener {
         System.out.println(hitLocation);
         hitLocation.getWorld().createExplosion(hitLocation, 2f);
         event.getEntity().getPersistentDataContainer().remove(EXPLOSIVE_ENTITY_KEY);
-
+        event.getEntity().remove();
     }
 }
