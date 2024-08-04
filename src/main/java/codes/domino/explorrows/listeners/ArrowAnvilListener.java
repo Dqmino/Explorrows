@@ -16,6 +16,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import static org.bukkit.util.NumberConversions.toByte;
+
 public class ArrowAnvilListener implements Listener {
     public static NamespacedKey EXPLOSIVE_ITEM_KEY = new NamespacedKey(Explorrows.getInstance(), "explosivearrow");
     private final ItemStack explosiveArrow = new ItemStack(Material.ARROW);
@@ -25,7 +27,7 @@ public class ArrowAnvilListener implements Listener {
         itemMeta.setItemName(ChatColor.LIGHT_PURPLE + "Explosive Arrow");
         itemMeta.setEnchantmentGlintOverride(true);
         PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-        container.set(EXPLOSIVE_ITEM_KEY, PersistentDataType.STRING, "explosivearrow");
+        container.set(EXPLOSIVE_ITEM_KEY, PersistentDataType.BYTE, toByte(1));
         explosiveArrow.setItemMeta(itemMeta);
     }
 
@@ -47,18 +49,21 @@ public class ArrowAnvilListener implements Listener {
         if (event.getClickedInventory().getType() != InventoryType.ANVIL) return;
         AnvilInventory anvilInventory = (AnvilInventory) event.getClickedInventory();
 
-        if (!event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(EXPLOSIVE_ITEM_KEY, PersistentDataType.STRING))
+        if (!event.getCurrentItem().getItemMeta().getPersistentDataContainer().has(EXPLOSIVE_ITEM_KEY, PersistentDataType.BYTE))
             return;
         if (!(anvilInventory.contains(Material.ARROW) && anvilInventory.contains(Material.TNT))) return;
 
         int amount = Math.min(anvilInventory.getContents()[0].getAmount(), anvilInventory.getContents()[1].getAmount());
         for (int i = 0; i < 2; i++) {
             if (anvilInventory.getContents()[i].getAmount() > amount) {
-
-                ItemStack newStuff = anvilInventory.getContents()[i].clone();
-                newStuff.setAmount(newStuff.getAmount() - amount);
+                ItemStack newItem = anvilInventory.getContents()[i].clone();
+                int leftOver = newItem.getAmount() - amount;
+                if (leftOver == 0) {
+                    continue;
+                }
+                newItem.setAmount(leftOver);
                 int finalI = i;
-                Explorrows.getInstance().getServer().getScheduler().runTask(Explorrows.getInstance(), () -> anvilInventory.setItem(finalI, newStuff));
+                Explorrows.getInstance().getServer().getScheduler().runTask(Explorrows.getInstance(), () -> anvilInventory.setItem(finalI, newItem));
             }
         }
     }

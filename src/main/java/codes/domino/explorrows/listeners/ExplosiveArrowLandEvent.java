@@ -3,7 +3,6 @@ package codes.domino.explorrows.listeners;
 import codes.domino.explorrows.Explorrows;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -15,7 +14,7 @@ public class ExplosiveArrowLandEvent implements Listener {
 
     @EventHandler
     public void onProjectileLand(ProjectileHitEvent event) {
-        if (!event.getEntity().getPersistentDataContainer().has(EXPLOSIVE_ENTITY_KEY, PersistentDataType.STRING))
+        if (!event.getEntity().getPersistentDataContainer().has(EXPLOSIVE_ENTITY_KEY, PersistentDataType.BYTE))
             return;
         Location hitLocation;
         if (event.getHitEntity() != null) {
